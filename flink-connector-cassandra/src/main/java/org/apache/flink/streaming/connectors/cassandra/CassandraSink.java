@@ -200,18 +200,6 @@ public class CassandraSink<IN> {
      * @param <IN> input type
      * @return CassandraSinkBuilder, to further configure the sink
      */
-    public static <IN> CassandraSinkBuilder<IN> addSink(
-            org.apache.flink.streaming.api.scala.DataStream<IN> input) {
-        return addSink(input.javaStream());
-    }
-
-    /**
-     * Writes a DataStream into a Cassandra database.
-     *
-     * @param input input DataStream
-     * @param <IN> input type
-     * @return CassandraSinkBuilder, to further configure the sink
-     */
     public static <IN> CassandraSinkBuilder<IN> addSink(DataStream<IN> input) {
         TypeInformation<IN> typeInfo = input.getType();
         if (typeInfo instanceof TupleTypeInfo) {
