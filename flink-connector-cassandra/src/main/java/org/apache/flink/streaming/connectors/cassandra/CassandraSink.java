@@ -26,7 +26,6 @@ import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.typeutils.PojoTypeInfo;
 import org.apache.flink.api.java.typeutils.RowTypeInfo;
 import org.apache.flink.api.java.typeutils.TupleTypeInfo;
-import org.apache.flink.api.scala.typeutils.CaseClassTypeInfo;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSink;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -228,16 +227,6 @@ public class CassandraSink<IN> {
                     input,
                     input.getType(),
                     input.getType().createSerializer(input.getExecutionEnvironment().getConfig()));
-        }
-        if (typeInfo instanceof CaseClassTypeInfo) {
-            DataStream<Product> productInput = (DataStream<Product>) input;
-            return (CassandraSinkBuilder<IN>)
-                    new CassandraScalaProductSinkBuilder<>(
-                            productInput,
-                            productInput.getType(),
-                            productInput
-                                    .getType()
-                                    .createSerializer(input.getExecutionEnvironment().getConfig()));
         }
         throw new IllegalArgumentException(
                 "No support for the type of the given DataStream: " + input.getType());
