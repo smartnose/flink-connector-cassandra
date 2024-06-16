@@ -50,7 +50,7 @@ under the License.
 		<findbugs.version>1.3.9</findbugs.version>
 
 		<!--driver 3.x works with 3.x and 4.x versions of Cassandra but driver 4.x is a complete refactoring with different API-->
-		<driver.version>3.11.2</driver.version>
+		<driver.version>4.18.1</driver.version>
 	</properties>
 
 	<dependencies>
@@ -91,10 +91,9 @@ under the License.
 		<!--Using datastax provided shaded driver which includes relocated netty-->
 		<!--https://docs.datastax.com/en/developer/java-driver/3.1/manual/shaded_jar/-->
 		<dependency>
-			<groupId>com.datastax.cassandra</groupId>
-			<artifactId>cassandra-driver-core</artifactId>
+			<groupId>org.apache.cassandra</groupId>
+			<artifactId>java-driver-core</artifactId>
 			<version>${driver.version}</version>
-			<classifier>shaded</classifier>
 			<exclusions>
 				<!--Because the shaded JAR uses netty original POM, we still need to exclude netty explicitly-->
 				<exclusion>
@@ -126,8 +125,8 @@ under the License.
 		</dependency>
 
 		<dependency>
-			<groupId>com.datastax.cassandra</groupId>
-			<artifactId>cassandra-driver-mapping</artifactId>
+			<groupId>org.apache.cassandra</groupId>
+			<artifactId>java-driver-mapper-runtime</artifactId>
 			<version>${driver.version}</version>
 			<exclusions>
 				<!--use the shaded driver above-->

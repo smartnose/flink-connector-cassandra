@@ -33,11 +33,7 @@ import org.apache.flink.streaming.api.transformations.LegacySinkTransformation;
 import org.apache.flink.streaming.runtime.operators.CheckpointCommitter;
 import org.apache.flink.types.Row;
 
-import com.datastax.driver.core.Cluster;
-
 import java.time.Duration;
-
-import scala.Product;
 
 /**
  * This class wraps different Cassandra sink implementations to provide a common interface for all
@@ -596,45 +592,6 @@ public class CassandraSink<IN> {
         protected CassandraSink<IN> createWriteAheadSink() throws Exception {
             throw new IllegalArgumentException(
                     "Exactly-once guarantees can only be provided for tuple types.");
-        }
-    }
-
-    /**
-     * Builder for a {@link CassandraScalaProductSink}.
-     *
-     * @param <IN>
-     */
-    public static class CassandraScalaProductSinkBuilder<IN extends Product>
-            extends CassandraSinkBuilder<IN> {
-        public CassandraScalaProductSinkBuilder(
-                DataStream<IN> input, TypeInformation<IN> typeInfo, TypeSerializer<IN> serializer) {
-            super(input, typeInfo, serializer);
-        }
-
-        @Override
-        protected void sanityCheck() {
-            super.sanityCheck();
-            if (query == null || query.length() == 0) {
-                throw new IllegalArgumentException("Query must not be null or empty.");
-            }
-            if (keyspace != null) {
-                throw new IllegalArgumentException(
-                        "Specifying a default keyspace is only allowed when using a Pojo-Stream as input.");
-            }
-        }
-
-        @Override
-        public CassandraSink<IN> createSink() throws Exception {
-            final CassandraScalaProductSink<IN> sink =
-                    new CassandraScalaProductSink<>(
-                            query, builder, configBuilder.build(), failureHandler);
-            return new CassandraSink<>(input.addSink(sink).name("Cassandra Sink"));
-        }
-
-        @Override
-        protected CassandraSink<IN> createWriteAheadSink() throws Exception {
-            throw new IllegalArgumentException(
-                    "Exactly-once guarantees can only be provided for flink tuple types.");
         }
     }
 }
